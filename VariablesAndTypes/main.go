@@ -1,5 +1,14 @@
 package main
 
+import (
+	"fmt"
+	"reflect"
+)
+
+// Const : Constant  Declaration : const <name> <type> = <value>
+
+const aConstString string = "This is a constant string"
+
 func main() {
 
 	/*
@@ -40,4 +49,38 @@ func main() {
 		These are the built-in types in Go but they're just the beginning point, because again, you can create your own data types in this language.
 	*/
 
+	var aString string = "This is my a first example" // explicit type declaration
+	fmt.Printf("aString: %s\n", aString)
+	fmt.Println("aString Type : ", reflect.TypeOf(aString))
+
+	var anInteger int = 45
+	fmt.Printf("anInteger: %d\n", anInteger)
+
+	var defaultInt int
+	fmt.Printf("defaultInt: %d\n", defaultInt)
+
+	var anotherString = "This is another string" // implicit type declaration
+	fmt.Printf("anotherString: %s\n", anotherString)
+	fmt.Println("anotherString Type : ", reflect.TypeOf(anotherString))
+
+	var anotherInt = 154
+	fmt.Println("anotherInt Type : ", reflect.TypeOf(anotherInt))
+
+	myInt := 4569
+	fmt.Println("MyInt Type : ", reflect.TypeOf(myInt))
+
+	fmt.Println("Contstant String : ", aConstString)
+
+	numbers := []int{5, 9, 6, 7, 89}
+	sumOfListResult := sumOfList(numbers)
+	fmt.Println("Sum of List Value : ", sumOfListResult)
+}
+
+func sumOfList(numbers []int) int {
+	var sum int = 0
+	fmt.Println(sum)
+	for _, number := range numbers {
+		sum += number
+	}
+	return sum
 }
