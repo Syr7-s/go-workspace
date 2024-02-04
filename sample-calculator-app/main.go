@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -14,9 +15,9 @@ func main() {
 
 func calculate(value1 string, value2 string) float64 {
 	// Your code goes here.
-	first, _ := strconv.ParseFloat(value1, 64)
+	first, _ := strconv.ParseFloat(strings.TrimSpace(value1), 64)
 	// Convert the first string to a float64
-	second, _ := strconv.ParseFloat(value2, 64)
+	second, _ := strconv.ParseFloat(strings.TrimSpace(value2), 64)
 	// Convert the second string to a float64
 
 	// Calculate and return the result
