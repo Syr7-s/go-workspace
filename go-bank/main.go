@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 )
 
 var users = make(map[int]User)
@@ -29,15 +30,20 @@ func main() {
 
 		case 2:
 			fmt.Println("Welcome to Login")
-			var uName string
+			var uId int
 			var pwd string
-			fmt.Println("Enter username : ")
-			fmt.Scan(&uName)
+			fmt.Println("Enter userID : ")
+			fmt.Scan(&uId)
 			fmt.Println("Enter password : ")
 			fmt.Scan(&pwd)
-			isValidUser := login(uName, pwd)
+			fmt.Println("Entered Value : ")
+			fmt.Println(uId)
+			fmt.Println(pwd)
+			fmt.Println("****************")
+			isValidUser := login(uId, pwd)
 			if isValidUser {
 				fmt.Println("Valid User")
+				atm(uId)
 
 			} else {
 				fmt.Println("Invalid User")
@@ -74,6 +80,7 @@ func main() {
 }
 
 type User struct {
+	userID   int
 	userName string
 	password string
 	balance  int64
@@ -82,9 +89,9 @@ type User struct {
 func registeredAccount() map[int]User {
 	fmt.Println("Registered Account")
 	//users := make(map[int]User)
-	users[1] = User{userName: "tom", password: "t1m3+0n", balance: rand.Int63n(1000) * 10}
-	users[2] = User{userName: "kate", password: "kt3*-", balance: rand.Int63n(1000) * 10}
-	users[3] = User{userName: "chris", password: "chr1s*", balance: rand.Int63n(1000) * 10}
+	users[111] = User{userID: 111, userName: "tom", password: "t1m3+0n", balance: rand.Int63n(1000) * 10}
+	users[112] = User{userID: 112, userName: "kate", password: "kt3*-", balance: rand.Int63n(1000) * 10}
+	users[113] = User{userID: 113, userName: "chris", password: "chr1s*", balance: rand.Int63n(1000) * 10}
 
 	return users
 }
@@ -110,36 +117,74 @@ func createAccount() {
 	fmt.Scan(&userName)
 	fmt.Println("Enter password : ")
 	fmt.Scan(&password)
-	users[len(users)+1] = User{userName: userName, password: password, balance: rand.Int63n(1000) * 10}
+	userId := int(rand.Int63n(1000))
+	users[userId] = User{userID: userId, userName: userName, password: password, balance: rand.Int63n(1000) * 10}
 
 }
 
-func login(userName string, password string) bool {
+func login(userId int, password string) bool {
+	fmt.Println("We are login")
 	for i, _ := range users {
-		if users[i].userName == userName && users[i].password == password {
+		if int(users[i].userID) == int(userId) && users[i].password == password {
+			fmt.Println("We are here")
 			return true
 		}
+		fmt.Println("We are not here, ", i)
 	}
 	return false
 }
 
-func atm() {
+func atm(userId int) {
 	var opt int
-	fmt.Println("1. Deposit")
-	fmt.Println("2. Withdraw")
-	fmt.Println("3. Check Balance")
-	fmt.Println("4. Exit")
-	fmt.Println("Enter your choice : ")
-	opt, _ = fmt.Scan(&opt) // what is the return value of Scan function :  number of scanned items and error. Scan returns the number of items scanned. If that is less than the number of arguments, err will report why.
-	// what is the & operator :  & is the address operator. It returns the address of a variable.
-	switch opt {
-	case 1:
-		fmt.Println("Deposit")
-	case 2:
-		fmt.Println("Withdraw")
-	case 3:
-		fmt.Println("Check Balance")
-	case 4:
-		fmt.Println("Exit")
+	fmt.Println("Welcome To  Your Account : ", users[userId].userName)
+	for {
+		fmt.Println("1. Deposit")
+		fmt.Println("2. Withdraw")
+		fmt.Println("3. Check Balance")
+		fmt.Println("4. Exit")
+		fmt.Println("Enter your choice : ")
+		opt, _ = fmt.Scan(&opt) // what is the return value of Scan function :  number of scanned items and error. Scan returns the number of items scanned. If that is less than the number of arguments, err will report why.
+		// what is the & operator :  & is the address operator. It returns the address of a variable.
+		switch opt {
+		case 1:
+			fmt.Println("Deposit Money")
+			depositToUserAccount(userId)
+			break
+		case 2:
+			fmt.Println("Withdraw Money")
+			break
+		case 3:
+			fmt.Println("Check Balance")
+			break
+		case 4:
+			fmt.Println("Exit")
+			break
+
+		}
 	}
+
+}
+
+func depositToUserAccount(userId int) {
+	var amountDeposit int
+	fmt.Println("Enter the amount deposit")
+	fmt.Scan(&amountDeposit)
+	fmt.Println("Your money is depositing")
+	for i := 0; i < 5; i++ {
+		time.Sleep(1000)
+		fmt.Print(".\t")
+	}
+	fmt.Println()
+	if amountDeposit < 5 {
+		fmt.Println("You can deposit money min 5 $")
+		depositToUserAccount(userId)
+	}
+	if amountDeposit > 10000 {
+		fmt.Println("You can deposit money max 10000$")
+		depositToUserAccount(userId)
+	}
+	user := users[userId]
+	user.balance += int64(amountDeposit)
+	users[userId] = user
+	fmt.Println("Your money was successfully deposit. Current Money : ", users[userId].balance)
 }
