@@ -158,15 +158,15 @@ func atm(userId int) {
 		case 1:
 			fmt.Println("Deposit Money")
 			depositToUserAccount(userId)
-			break
+
 		case 2:
 			fmt.Println("Withdraw Money")
 			withDrawMoneyFromAccount(userId)
-			break
+
 		case 3:
 			fmt.Println("Check Balance")
 			checkMoneyFromAccount(userId)
-			break
+
 		case 4:
 			fmt.Println("User is quiting from Login Screen")
 			for i := 0; i < 5; i++ {
