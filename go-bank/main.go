@@ -9,7 +9,11 @@ import (
 var users = make(map[int]User)
 
 func main() {
-	fmt.Println("**************************** Welvome to Go Bank *****************************")
+	fmt.Println("**************************** Welcome to Go Bank *****************************")
+	//go func() {
+	//	fmt.Println("Go Routine get registered Account ")
+	//	registeredAccount()
+	//}()
 	fmt.Println("1. Create Account")
 	fmt.Println("2. Login")
 	fmt.Println("3. Get Registered Account")
@@ -135,16 +139,21 @@ func login(userId int, password string) bool {
 }
 
 func atm(userId int) {
-	var opt int
+
 	fmt.Println("Welcome To  Your Account : ", users[userId].userName)
 	for {
+		var opt int
 		fmt.Println("1. Deposit")
 		fmt.Println("2. Withdraw")
 		fmt.Println("3. Check Balance")
 		fmt.Println("4. Exit")
 		fmt.Println("Enter your choice : ")
-		opt, _ = fmt.Scan(&opt) // what is the return value of Scan function :  number of scanned items and error. Scan returns the number of items scanned. If that is less than the number of arguments, err will report why.
+		selectedValue, err := fmt.Scan(&opt) // what is the return value of Scan function :  number of scanned items and error. Scan returns the number of items scanned. If that is less than the number of arguments, err will report why.
 		// what is the & operator :  & is the address operator. It returns the address of a variable.
+		if err != nil {
+			return
+		}
+		fmt.Println("Opt : ", selectedValue)
 		switch opt {
 		case 1:
 			fmt.Println("Deposit Money")
@@ -152,15 +161,25 @@ func atm(userId int) {
 			break
 		case 2:
 			fmt.Println("Withdraw Money")
+			withDrawMoneyFromAccount(userId)
 			break
 		case 3:
 			fmt.Println("Check Balance")
+			checkMoneyFromAccount(userId)
 			break
 		case 4:
-			fmt.Println("Exit")
-			break
+			fmt.Println("User is quiting from Login Screen")
+			for i := 0; i < 5; i++ {
+				time.Sleep(time.Second * 3)
+				fmt.Print(".\t")
+			}
+			fmt.Println()
+			return
+		default:
+			fmt.Println("Invalid choice")
 
 		}
+
 	}
 
 }
@@ -171,7 +190,7 @@ func depositToUserAccount(userId int) {
 	fmt.Scan(&amountDeposit)
 	fmt.Println("Your money is depositing")
 	for i := 0; i < 5; i++ {
-		time.Sleep(1000)
+		time.Sleep(time.Second * 3)
 		fmt.Print(".\t")
 	}
 	fmt.Println()
@@ -187,4 +206,34 @@ func depositToUserAccount(userId int) {
 	user.balance += int64(amountDeposit)
 	users[userId] = user
 	fmt.Println("Your money was successfully deposit. Current Money : ", users[userId].balance)
+}
+
+func withDrawMoneyFromAccount(userId int) {
+	var amountWithdrawMoney int
+	fmt.Println("Enter the withdraw money")
+	fmt.Scan(&amountWithdrawMoney)
+	fmt.Println("Your Money is drawing")
+	for i := 0; i < 5; i++ {
+		time.Sleep(time.Second * 3)
+		fmt.Print(".\t")
+	}
+	fmt.Println()
+	user := users[userId]
+	if user.balance < int64(amountWithdrawMoney) {
+		fmt.Println("Not enough balance.Please enter again if you would withdraw money")
+		withDrawMoneyFromAccount(userId)
+	}
+	if amountWithdrawMoney%5 != 0 {
+		fmt.Println("You can only draw money multiples of 5.")
+		withDrawMoneyFromAccount(userId)
+	}
+	user.balance -= int64(amountWithdrawMoney)
+	users[userId] = user
+	fmt.Println("Your money was successfully draw. Current Money : ", users[userId].balance)
+
+}
+
+func checkMoneyFromAccount(userId int) {
+	user := users[userId]
+	fmt.Printf("%s named user has %d $ money\n", user.userName, user.balance)
 }
