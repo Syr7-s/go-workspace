@@ -87,9 +87,9 @@ func PlayerEnterIndexValues() {
 	var playerIndexX int
 	var playerIndexY int
 	for {
-		fmt.Printf("Enter indexX value (between 0 and %d):", *gameAreaSize)
+		fmt.Printf("Enter indexX value (between 0 and %d):", *gameAreaSize-1)
 		_, _ = fmt.Scanln(&playerIndexX)
-		fmt.Printf("Enter indexY value (between 0 and %d):", *gameAreaSize)
+		fmt.Printf("Enter indexY value (between 0 and %d):", *gameAreaSize-1)
 		_, _ = fmt.Scanln(&playerIndexY)
 		result := IsValidIndexXAndIndexY(playerIndexX, playerIndexY)
 		if result {
@@ -102,18 +102,15 @@ func PlayerEnterIndexValues() {
 }
 
 func ComputerEnterIndexValues() {
-	//rand.Seed(time.Now().UnixNano())
 	var computerIndexX = rand.Intn(*gameAreaSize)
 	var computerIndexY = rand.Intn(*gameAreaSize)
-	fmt.Println("ComputerIndexX : ", computerIndexX, "CompuerIndexY : ", computerIndexY)
+	fmt.Println("ComputerIndexX : ", computerIndexX, "CompTuerIndexY : ", computerIndexY)
 	cIndexX = &computerIndexX
 	cIndexY = &computerIndexY
-	fmt.Println("Computer IndexX : ", &cIndexX, " Computer IndexY : ", &cIndexY)
 }
 
 func IsMatrixIndexNull(indexX *int, indexY *int) bool {
 	fmt.Println("IndexX  : ", *indexX, "IndexY : ", *indexY)
-	fmt.Println()
 	if gameMatrix[*indexX][*indexY] == "None" {
 		return true
 	} else if gameMatrix[*indexX][*indexY] == "S" {
@@ -153,7 +150,7 @@ func CharacterSControl(indexX *int, indexY *int) int {
 				continue
 			}
 			if gameMatrix[*indexX][*indexY] == "S" {
-				if *indexX+2*i >= 0 && *indexX+2-i < len(gameMatrix) && *indexY+2*j >= 0 && *indexY+2*j < len(gameMatrix) {
+				if *indexX+2*i >= 0 && *indexX+2*i < len(gameMatrix) && *indexY+2*j >= 0 && *indexY+2*j < len(gameMatrix) {
 					if gameMatrix[*indexX+i][*indexY+j] == "O" && gameMatrix[*indexX+2*i][*indexY+2*j] == "S" {
 						score++
 					}
@@ -162,6 +159,7 @@ func CharacterSControl(indexX *int, indexY *int) int {
 
 		}
 	}
+	fmt.Println("Score : ", score)
 	return score
 }
 
@@ -198,7 +196,6 @@ func PlayerOrderAndSLetterControl(indexX *int, indexY *int) {
 
 func PlayerOrderAndOLetterControl(indexX *int, indexY *int) {
 	sosCount := CharacterOControl(indexX, indexY)
-	fmt.Println(sosCount)
 	if sosCount > 0 && sosCount <= 2 {
 		fmt.Println("Player won 1 point.Thus, The Player  one more game")
 		playerScore++
@@ -213,7 +210,6 @@ func PlayerOrderAndOLetterControl(indexX *int, indexY *int) {
 
 func ComputerOrderAndSLetterControl(indexX *int, indexY *int) {
 	sosCount := CharacterSControl(indexX, indexY)
-	fmt.Println("SosCount : ", sosCount)
 	if sosCount > 0 {
 		fmt.Println("Computer won ", sosCount, " point.Thus, the Player won one more game")
 		computerScore += score
@@ -225,7 +221,6 @@ func ComputerOrderAndSLetterControl(indexX *int, indexY *int) {
 
 func ComputerOrderAndOLetterControl(indexX *int, indexY *int) {
 	sosCount := CharacterOControl(indexX, indexY)
-	fmt.Println(sosCount)
 	if sosCount > 0 && sosCount <= 2 {
 		fmt.Println("Computer won 1 point.Thus, The Player  one more game")
 		computerScore++
@@ -239,7 +234,7 @@ func ComputerOrderAndOLetterControl(indexX *int, indexY *int) {
 }
 
 func PlayerContinueGame(numberOfMatrixElements *int, sosGameMatrix [][]string, pEnterCharacter *string, playerOrder bool) {
-	fmt.Println("NumberOfMatrixElements : in Player ", *numberOfMatrixElements, " Address : ", numberOfMatrixElements)
+	fmt.Println("NumberOfMatrixElements : in Player ", *numberOfMatrixElements, " Address : ", &numberOfMatrixElements)
 	*numberOfMatrixElements--
 	gameMatrix = sosGameMatrix
 	fmt.Println("Player Index State : ", indexState)
@@ -256,10 +251,9 @@ func PlayerContinueGame(numberOfMatrixElements *int, sosGameMatrix [][]string, p
 }
 
 func ComputerContinueGame(numberOfMatrixElements *int, sosGameMatrix [][]string, cEnterCharacter *string, computerOrder bool) {
-	fmt.Println("NumberOfMatrixElements : in Player ", *numberOfMatrixElements, " Address : ", numberOfMatrixElements)
+	fmt.Println("NumberOfMatrixElements : in Player ", *numberOfMatrixElements, " Address : ", &numberOfMatrixElements)
 	*numberOfMatrixElements--
 	gameMatrix = sosGameMatrix
-	fmt.Println("Computer Index State : ", indexState)
 	for !indexState {
 		ComputerEnterIndexValues()
 		indexState = IsMatrixIndexNull(cIndexX, cIndexY)
@@ -273,13 +267,10 @@ func ComputerContinueGame(numberOfMatrixElements *int, sosGameMatrix [][]string,
 
 func Game() {
 	var gameMatrix = &sosGameMatrix
-	fmt.Println("PlayerOrder : ", playerOrder)
 	var noMatrixElements = &numberOfMatrixElements
 	if playerOrder {
-		fmt.Println("We are player")
 		PlayerContinueGame(noMatrixElements, *gameMatrix, &playerEnterCharacter, playerOrder)
 	} else {
-		fmt.Println("We are computer")
 		ComputerContinueGame(noMatrixElements, *gameMatrix, &computerPlayerCharacter, computerOrder)
 	}
 }
